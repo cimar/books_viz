@@ -182,24 +182,24 @@ nv.models.stackedAreaChart = function() {
             disabled: stacked.style() != 'stack',
             style: 'stack'
           },
-          {
-            key: controlLabels.stream || 'Stream',
-            metaKey: 'Stream',
+//          {
+//            key: controlLabels.stream || 'Stream',
+/*            metaKey: 'Stream',
             disabled: stacked.style() != 'stream',
             style: 'stream'
-          },
+          }, */
           {
             key: controlLabels.expanded || 'Expanded',
             metaKey: 'Expanded',
             disabled: stacked.style() != 'expand',
             style: 'expand'
-          },
+          }/*,
           {
             key: controlLabels.stack_percent || 'Stack %',
             metaKey: 'Stack_Percent',
             disabled: stacked.style() != 'stack_percent',
             style: 'stack_percent'
-          }
+          }*/
         ];
 
         controlWidth = (cData.length/3) * 260;

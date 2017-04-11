@@ -1,0 +1,326 @@
+body {
+  margin:0px;
+  padding:0px;
+}
+
+.big-title {
+    font-size: 101px;
+    font-family: "Mercury SSm A", "Mercury SSm B";
+    font-style: normal;
+    font-weight: 900;
+    font-style: italic;
+    text-align: center;
+    line-height: 108px;
+    margin: 0 auto;
+    padding: 0px;
+    max-width: 860px;
+}
+
+
+.opening-section {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    -webkit-justify-content:center;
+    justify-content: center;
+    padding-top: 230px;
+    margin-bottom: 50px;
+}
+
+
+.logo-container {
+  width: 180px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-justify-content: center;
+  position: absolute;
+  top: 40px;
+  left: 0px;
+  right: 0px;
+  margin: 0 auto;
+}
+
+.logo {
+    /* height: 36px; */
+    /* text-decoration: none; */
+    /* width: 36px; */
+}
+
+.name{
+  margin: 0px;
+  text-decoration: none;
+  line-height: 30px;
+  font-weight: 500;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 20px;
+  font-weight: 600;
+  margin-top: 4px;
+  margin-top: 4px;
+  font-family: "Whitney SSm A", "Whitney SSm B";
+  color: black;
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+  display: block;
+  font-weight: 600;
+  text-transform: uppercase;
+/*  font-size: 0.8rem;*/
+  margin-top: 0.75em;
+  letter-spacing: 0.05em;
+}
+
+.quote{
+  text-align: center;
+  font-style: italic;
+  font-size: 1rem;
+  line-height: 1.7rem;
+  margin-bottom: 1.2rem;
+  font-weight: 400;  
+}
+
+.prose{
+  font-family: "Mercury SSm A", "Mercury SSm B";
+  font-size: 1rem;
+  line-height: 1.7rem;
+  margin-bottom: 1.2rem;
+  font-weight: 400;
+  /* color: rgba(0, 0, 0, 0.88); */
+}
+
+a:visited{
+  color: initial;
+}
+
+.logo-svg {
+  width: 50px;
+  height: 50px;
+  height: 50px;
+}
+
+.title-sub{
+  text-align: center;
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 500;
+  font-family: "Whitney SSm A", "Whitney SSm B";
+}
+
+
+.story-section {
+    max-width: 750px;
+    margin: 0 auto;
+}
+
+.shorty-gif {
+    max-width: 300px;
+    margin: 0 auto;
+    width: 300px;
+    pointer-events: none;
+    height: 240px;
+    margin-top: 30px;
+    margin-bottom: 40px;
+}
+
+a{
+  color:black;
+}
+
+.prose-wrapper {
+    width: 640px;
+    margin: 0 auto;
+    margin-bottom: 70px;
+}
+.by-line{
+  font-family: "Whitney SSm A", "Whitney SSm B";
+  font-size: 13px;
+  font-weight: 500;
+  text-align: center;
+  margin-top: 60px;
+}
+
+p{
+  margin:0px;
+}
+
+.top-slang-section{width: 100%;background: rgba(255, 223, 223, 0.58);margin-bottom: 50px;margin-top: 60px;position: relative;}
+
+
+.top-slang-section-content {
+    width: 640px;
+    margin: 0 auto;
+    padding-top: 40px;
+    padding-bottom: 100px;
+    font-family: "Whitney SSm A", "Whitney SSm B";
+    position: relative;
+}
+
+.top-slang-section-title-top {
+    font-family: "Whitney SSm A", "Whitney SSm B";
+    color: #FF3333;
+    font-weight: 600;
+    font-size: 19px;
+}
+
+.top-slang-section-title-bottom {
+    margin: 0px;
+    font-size: 16px;
+    letter-spacing: -.3px;
+    /* text-transform: uppercase; */
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+
+.top-slang-section-table {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+}
+
+.top-slang-section-table-foot{
+
+}
+
+.top-slang-section-title {
+    margin-bottom: 30px;
+}
+
+.top-slang-section-table-current-year {
+    border-bottom: 2px solid #FF3333;
+    color: #FF3333;
+    font-weight: 600;
+    text-align: center;
+    padding-bottom: 4px;
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+.top-slang-section-table-current {
+    width: 248px;
+    margin-right: 0px;
+}
+
+.top-slang-section-table-current-item {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.top-slang-section-table-current-items {height: 210px;display: -webkit-box;display: -ms-flexbox;display: -webkit-flex;display: flex;-webkit-flex-direction: column;flex-direction: column;-webkit-flex-wrap: wrap;flex-wrap: wrap;line-height: 20px;}
+
+.top-slang-section-table-current-item-num  {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+
+.top-slang-section-table-past {
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    margin-left: 10px;
+}
+
+.top-slang-section-table-past-column {
+    margin-right: 20px;
+}
+
+.top-slang-section-table-past-column-year {
+    border-bottom: 2px solid black;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 21px;
+    padding-bottom: 3px;
+    text-align: center;
+    margin-bottom: 9px;
+}
+
+.top-slang-section-table-past-column-item {
+    font-size: 15px;
+    line-height: 18px;
+}
+
+b {
+    font-weight: 500;
+}
+
+.top-slang-section-table-foot {
+    position: absolute;
+    bottom: 15px;
+    width: 100%;
+    font-size: 12px;
+    font-weight: 500;
+    left: 0px;
+}
+
+
+.full-frame {
+    height: 630px;
+    max-width: 1060px;
+    width: 100%;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.prose-header{
+  font-family: "Whitney SSm A", "Whitney SSm B";
+  font-size: 23px;
+  /* text-transform: uppercase; */
+  margin-top: 80px;
+  font-weight: 700;
+  /* font-family: "Mercury SSm A", "Mercury SSm B"; */
+  margin-bottom: 43px;
+}
+.prose-def{
+  font-size: 18px;
+  font-weight: 500;
+  /* text-transform: uppercase; */
+  font-family: "Mercury SSm A", "Mercury SSm B";
+  font-style: italic;
+  margin-bottom: 15px;
+  margin-top: 36px;
+  line-height: 29px;
+}
+
+
+.geo-frame {
+    height: 860px;
+    max-width: 1140px;
+    width: 100%;
+    margin: 0 auto;
+    overflow: visible;
+}
+
+.giphy-embed {
+    background: black;
+}
+
+.red-line {
+    background: #fae5e5;
+    color: #d62f30;
+    padding: 3px 5px;
+    border-radius: 4px;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.prose-image {
+    margin-bottom: 60px;
+    /* border-top: 1px solid #ccc; */
+    padding-top: 10px;
+    /* border-bottom: 1px solid #ccc; */
+    /* padding-bottom: 5px; */
+    margin-top: 50px;
+}
