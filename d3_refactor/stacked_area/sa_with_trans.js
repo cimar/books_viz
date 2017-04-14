@@ -1,16 +1,14 @@
 /// TO DO:
 
-////  Tooltip
-////  https://bl.ocks.org/fabiomainardi/3976176cb36e718a608f
+////  Guideline??
+//// 
 
-////  Dynamic filtering
+////  OPTIONAL: Dynamic filtering? 
 ////  (using the below for scaling might make filtering easier)
 ////
 ////  http://stackoverflow.com/questions/16351244/convert-result-to-percentage-in-d3 
 
 ////  Draw the controls in the SVG
-
-////  Divergent bars
 
 const bisectDate = d3.bisector(d => d.date).left;
 
@@ -37,8 +35,8 @@ var area = d3.area()
 var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-var datastr = "data2.tsv",
-other_data_str = "data.tsv";
+var datastr = "data.tsv",
+other_data_str = "data2.tsv";
 
 // Define the div for the tooltip
 
