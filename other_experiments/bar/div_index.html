@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  width: 60px;
+  height: 28px;
+  padding: 2px;
+  font: 12px sans-serif;
+  background: lightsteelblue;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.bar {
+  fill: steelblue;
+}
+
+.bar:hover {
+  fill: brown;
+}
+
+.neg_bar {
+  fill: darkgreen;
+}
+
+.neg_bar:hover {
+  fill: orange;
+}
+
+.axis--x path {
+  display: none;
+}
+
+</style>
+<body>
+<svg class="chart"></svg>
+</body>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="divergent_bar.js" type="text/javascript"></script>
