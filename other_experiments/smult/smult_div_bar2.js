@@ -3,32 +3,8 @@
 // 
 
 
-var margin = {top: 8, right: 10, bottom: 2, left: 10},
-    width = 300 - margin.left - margin.right,
-    height = 160 - margin.top - margin.bottom;
+  var parseDate = d3.timeParse("%Y");
 
-var parseDate = d3.timeParse("%Y");
-
-var y = d3.scaleTime()
-    .range([0, height]);
-
-var x = d3.scaleLinear()
-    .range([width, 0]);
-
-/*
-var area = d3.area()
-    .y(function(d) { return y(d.date); })
-    .y0(width)
-    .y1(function(d) { return x(d.percent); });
-
-var line = d3.line()
-    .y(function(d) { return y(d.date); })
-    .x(function(d) { return x(d.percent); });
-*/
-
-function key_funct(d) {
-  return d.genre;
-}
 
 /*function getBandwidth(xdom, arr) {
     xmin = d3.min(arr, function(s) { return s.values[0].date; });
@@ -39,14 +15,38 @@ function key_funct(d) {
 }*/
 
 
-d3.tsv("the_data.tsv", type, function(error, data) {
+function smallMultiples(data){
 
-  console.log(data);
+  var margin = {top: 25, right: 10, bottom: 15, left: 10},
+    width = 300 - margin.left - margin.right,
+    height = 200 - margin.top - margin.bottom;
+
+
+  var y = d3.scaleTime()
+      .range([0, height]);
+
+  var x = d3.scaleLinear()
+      .range([width, 0]);
+
+  function getBandwidth(dom, arr) {
+      r = dom(parseDate("2020")) - dom(parseDate("1950"));
+      console.log(arr);
+      return r/7.0 -5;
+  }
+
+  function key_funct(d) {
+    return d.genre;
+  }
+
+
+
+
+  
+    console.log(data);
   // Nest data by genre.
   var genres = d3.nest().key(key_funct).entries(data);
 
   console.log(genres);
-
 
   // Compute the maximum percent per genre, needed for the x-domain.
   genres.forEach(function(s) {
@@ -66,12 +66,6 @@ d3.tsv("the_data.tsv", type, function(error, data) {
     }
   });
 
-function getBandwidth(xdom, arr) {
-    r = xdom(2);
-    console.log(r);
-    return (width/r)*2;
-}
-
   //console.log(genres);
   //console.log(genres[4]);
 
@@ -79,7 +73,8 @@ function getBandwidth(xdom, arr) {
   //
   // Compute the minimum and maximum date across genres.
   // We assume values are sorted by date.
-  y.domain([parseDate("1950"),parseDate("2015")]);
+  y.domain([parseDate("1950"),parseDate("2020")]);
+  x.domain(d3.extent([-1, 1]));
 
   console.log(genres[1].values.map(function(d) { return d.decade; }));
   // Add an SVG element for each genre, with the desired dimensions and margin.
@@ -98,22 +93,17 @@ function getBandwidth(xdom, arr) {
 
   bars.append("rect")
       .attr("class", "bar")
-      .attr("y", function(d) { console.log(y(d.decade));return y(d.decade);})
-      .attr("height", 20) // MAKE A BANDWIDTH FN
-      .attr("x", function(d) { x.domain(d3.extent([-1, 1])); return x(0); })
+      .attr("y", function(d) { return y(d.decade);})
+      .attr("height", getBandwidth(y,data)) // MAKE A BANDWIDTH FN
+      .attr("x", function(d) { return x(0); })
       .attr("width", function(d) { return x(0) - x(d.percent); });
 
   bars.append("rect")
     .attr("class", "neg_bar")
     .attr("y", function(d) { return y(d.decade);})
-    .attr("height", 20)
-    .attr("x", function(d) { x.domain(d3.extent([-1, 1])); return x(d.perMen); })
+    .attr("height", getBandwidth(y,data))
+    .attr("x", function(d) { return x(d.perMen); })
     .attr("width", function(d) { return Math.abs(x(0) - x(d.perMen)); });
-/*      .attr("class", "bar")
-      .attr("y", function(d) { return y(d.date);})
-      .attr("height", y(30))
-      .attr("x", function(d) { x.domain([0,d.maxPrice]); return x(d.percent); })
-      .attr("width", function(d) { return width - x(d.percent); });*/
 
   console.log(bars);
 
@@ -129,14 +119,41 @@ function getBandwidth(xdom, arr) {
       .attr("d", function(d) { x.domain([0, d.maxPrice]); return line(d.values); });
 */
   // Add a small label for the genre name.
-  svg.append("text")
-      .attr("y", height - 6)
+
+  svg.append("g")
+    .attr("class", "axis axis--y")
+    .attr("transform", "translate(" + x(0) + ","+7+")")
+    .call(d3.axisLeft(y).ticks(7, ""));
+
+  svg.append("g")
+    .attr("class", "axis axis--x")
+    .call(d3.axisTop(x).ticks(6, "%"));
+
+    svg.append("text")
+      .attr("y", height - 16)
       .attr("x", width - 6)
       .style("text-anchor", "end")
+      .style("font-weight","bold")
       .text(function(d) { return d.key; });
+
+    svg.append("text")
+      .attr("y", 15)
+      .attr("x", width*3/4)
+      .style("text-anchor", "left")
+      .text("Percent Women");
+
+    svg.append("text")
+      .attr("y", 15)
+      .attr("x", width*1/4)
+      .style("text-anchor", "end")
+      .text("Percent Men");
+}
+
+d3.tsv("the_data.tsv", smult_type, function(error, data) {
+  smallMultiples(data);
 });
 
-function type(d) {
+function smult_type(d) {
   count_women = +d.count;
   count_total = count_women/(+d.percent);
   if ((d.genre!="zz_needs label") && (count_total > 10)) {

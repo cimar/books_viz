@@ -23,13 +23,28 @@ div.tooltip {
   pointer-events: none;
 }
 
+.bar {
+  fill: steelblue;
+}
+
+.neg_bar {
+  fill: #7e7e7e;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+.mult {
+  margin-top: 10px;
+  margin-left: 10px;
+  background: #f7f7f7;
+}
+
 </style>
 <script src="d3.v4.min.js"></script>
 <script type="text/javascript" src="combined.js"></script>
 <!--<script type="text/javascript" src="stacked_area.js"></script>-->
 
 <body>
-<div id="#genre-container">
 <svg width="960" height="500" id="genres"></svg>
 </div>
 <form id="genre_form" action="">
@@ -37,11 +52,11 @@ div.tooltip {
 <input type="radio" name="genre-scale" value="percent" onclick="transition('#genres')" checked>percent</input>
 <input type="radio" name="genre-scale" value="genres_only" onclick="transition('#genres')">genres only</input>
 </form>
-<div id="#gender-container">
 <svg width="960" height="500" id="genders"></svg>
-</div>
 <form id="gender_form" action="">
 <input type="radio" name="gender-scale" value="count" onclick="transition('#genders')">count</input>
 <input type="radio" name="gender-scale" value="percent" onclick="transition('#genders')" checked>percent</input>
 </form>
+<div width="960" height="900" id="smult"></div>
+
 </body>
