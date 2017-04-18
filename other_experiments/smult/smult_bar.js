@@ -5,7 +5,7 @@
 
 var margin = {top: 8, right: 10, bottom: 2, left: 10},
     width = 300 - margin.left - margin.right,
-    height = 200 - margin.top - margin.bottom;
+    height = 300 - margin.top - margin.bottom;
 
 var parseDate = d3.timeParse("%b %Y");
 

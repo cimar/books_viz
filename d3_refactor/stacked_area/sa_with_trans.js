@@ -68,7 +68,7 @@ function constructTtText(d){
     next = d[field];
     if ((field != "needs label") && (field != "No") && (field != "needs_label")) {
       if (field != "date"){
-        if (next < 1) {
+        if (datastr != "datastr2.") {
           next = d3.format(".0%")(next);
         }else{
           next = d3.format("1")(next);

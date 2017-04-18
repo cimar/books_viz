@@ -9,12 +9,12 @@
         fill: none;
         pointer-events: all;
     }
+.fiftyper {
+    }
 
 div.tooltip {
   position: absolute;
   text-align: center;
-  width: 80px;
-  height: 70px;
   padding: 2px;
   font: 12px sans-serif;
   background: white;
@@ -24,12 +24,24 @@ div.tooltip {
 }
 
 </style>
-<svg width="960" height="500"></svg>
-<script src="http://d3js.org/d3.v4.min.js"></script>
+<script src="d3.v4.min.js"></script>
+<script type="text/javascript" src="combined.js"></script>
 <!--<script type="text/javascript" src="stacked_area.js"></script>-->
-<script type="text/javascript" src="sa_with_trans.js"></script>
-<form action="">
-<input type="radio" name="scale" value="counts" onclick="transition()" checked>percentage</input>
-<input type="radio" name="scale" value="per" onclick="transition()">raw count</input>
+
+<body>
+<div id="#genre-container">
+<svg width="960" height="500" id="genres"></svg>
+</div>
+<form id="genre_form" action="">
+<input type="radio" name="genre-scale" value="count" onclick="transition('#genres')">count</input>
+<input type="radio" name="genre-scale" value="percent" onclick="transition('#genres')" checked>percent</input>
+<input type="radio" name="genre-scale" value="genres_only" onclick="transition('#genres')">genres only</input>
 </form>
-<svg></svg>
+<div id="#gender-container">
+<svg width="960" height="500" id="genders"></svg>
+</div>
+<form id="gender_form" action="">
+<input type="radio" name="gender-scale" value="count" onclick="transition('#genders')">count</input>
+<input type="radio" name="gender-scale" value="percent" onclick="transition('#genders')" checked>percent</input>
+</form>
+</body>

@@ -36,7 +36,7 @@ var g = svg.append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 var datastr = "genre_count.tsv",
-other_data_str = "data2.tsv";
+other_data_str = "gender_count.tsv";
 
 // Define the div for the tooltip
 
@@ -51,8 +51,8 @@ function reverse_order(ls){
 function constructData(d_ls){
   tar = [];
   for (d in d_ls){
-    item = +(d_ls[d]["data"]);
-    console.log(item);
+    item = d_ls[d]["data"];
+//    console.log(item);
     tar.push(item);
   }
   return tar;
@@ -61,15 +61,17 @@ function constructData(d_ls){
 var formatTime = d3.timeFormat("%Y");
 
 function constructTtText(d){
+//  console.log(d);
   str = "";
   i = 0;
   reversed = reverse_order(d);
+//  console.log(reversed);
   for(entry in reversed){
     field = reversed[entry];
     next = d[field];
-    if ((field != "needs label") && (field != "No") && (field != "needs_label")) {
+    //if ((field != "needs label") && (field != "No") && (field != "needs_label")) {
       if (field != "date"){
-        if (next < 1) {
+        if (cp_now == "percent") {
           next = d3.format(".0%")(next);
         }else{
           next = d3.format("1")(next);
@@ -83,31 +85,41 @@ function constructTtText(d){
       str = str + "<br/>";
     }
     i ++;
-  }
+  //}
   return str;
 }
 
-var div = d3.select("body").append("div") 
+var div = d3.select("#genre-container").append("div") 
   .attr("class", "tooltip")       
   .style("opacity", 0);
 
 var vertical = d3.select("body")
       .append("div")
-      .attr("class", "remove")
+      .attr("class", "vertical")
       .style("position", "absolute")
       .style("z-index", "19")
       .style("width", "1px")
       .style("height", height+"px")
-      .style("top", margin.top+"px")
-      .style("bottom", "0px")
+      .style("top", margin.top+9+"px")
       .style("left", "0px")
-      .style("background", "#fff");
+      .style("background", "#e7e7e7");
 
 
-function update(dstring){
+function update(dstring, count_or_per){
+  if(count_or_per == "count"){
+    type=count_type;
+  }else{
+    if (count_or_per == "percentage"){
+      type=per_type;
+    }else{
+      type = filtered_type
+    }
+  }
 
   d3.tsv(dstring, type, function(error, data) {
     var data = data;
+//    console.log(data);
+//    console.log(datastr);
     if (error) throw error;
 
 /*    data.forEach(function(d){
@@ -115,12 +127,8 @@ function update(dstring){
     });*/
 
     var keys = data.columns.slice(1);
-    console.log(keys);
-
     x.domain(d3.extent(data, function(d) { return d.date; }));
-
-    y.domain([0,250]);//d3.max(data,function(d) { return (+d.Total); })]);
-
+    y.domain([0,d3.max(data,function(d) { return (+d.Total); })]);
     z.domain(keys);
     stack.keys(keys);
 
@@ -165,8 +173,9 @@ function update(dstring){
         .attr("d", area);
 
     enterLayer.on("mousemove", function(d) {
+      console.log(d);
       d_array = constructData(d);
-//      console.log(d);
+      console.log(d_array);
       k = d.key
       mousex = d3.mouse(this);
       mousex = mousex[0];
@@ -179,33 +188,27 @@ function update(dstring){
         d = invertedx - d0.date > d1.date - invertedx ? d1 : d0;
 
       tooltip_text = constructTtText(d);
-//      console.log(d_array);
+      console.log(tooltip_text);
 
       div.transition()
          .duration(50)
          .style("opacity", .9);
       div.html(tooltip_text)
-         .style("left", (d3.event.pageX) + "px")
+         .style("left", (d3.event.pageX + 7) + "px")
          .style("top", (d3.event.pageY - 28) + "px");
 
-      vertical.style("left", (x(d.date+margin.left)) + "px" );
+      console.log(d.date);
+      vertical.transition()
+        .duration(50)
+        .style("left", x(d.date) + margin.left + 8 + "px" ); 
 
       })
-/*      .on("mouseover", function(d){  
-         d_array = constructData(d);
-         mousex = d3.mouse(this);
-         mousex = mousex[0];
-         var invertedx = x.invert(mousex);
-         var i = bisectDate(d_array, invertedx, 1);
-          d0 = d_array[i - 1],
-          d1 = d_array[i],
-          d = invertedx - d0.date > d1.date - invertedx ? d1 : d0
-         vertical.style("left", x(d.date+margin.left) + "px")})*/
+
       .on("mouseout", function(d) {
           div.transition()
             .duration(500)
             .style("opacity", 0);
-      });
+      }); 
 
     layer.merge(enterLayer)
         .transition().duration(1000)
@@ -215,20 +218,75 @@ function update(dstring){
   });
 }
 
-update(datastr);
+var cp_now = "percentage";
+update(datastr,cp_now);
 
 var color = "blue", color2="white";
 
+
 function transition() {
   var t;
-  t = datastr, datastr = other_data_str, other_data_str = t;
+//  d3.select
+  console.log("inside transition!");
+  //t = cp_now, cp_now = cp_later, cp_later = t;
+  cp_now = d3.select('input[name="scale"]:checked').node().value;
+  console.log("val...",cp_now);
 //  c = color, color=color2, color2=c;
 //  d3.select("body").style("background-color", color);
-  update(datastr);
+  update(datastr,cp_now);
 }
 
-function type(d, i, columns) {
+function count_type(d, i, columns) {
   d.date = parseDate(d.date);
-  for (var i = 1, n = columns.length; i < n; ++i) d[columns[i]] = d[columns[i]];
+  var tot = 0
+  for (var i = 1, n = columns.length; i < n; ++i){
+    d[columns[i]] = +d[columns[i]];
+    tot = tot + d[columns[i]]
+  } 
+  d.Total = tot;
+  return d;
+}
+
+function per_type(d, i, columns) {
+  d.date = parseDate(d.date);
+  var tot = 0;
+  col = columns.length;
+//  console.log(col);
+  for (var i = 1; i < col; ++i){
+//    console.log(d[columns[i]]);
+    tot = tot + (+d[columns[i]]);
+  } 
+  d.Total = tot;
+  for (var i = 1; i < col; ++i){
+    if (columns[i] != "Total"){
+      d[columns[i]] = (+d[columns[i]])/d.Total;
+    }
+  } 
+  d.Total = 1.0;
+//  console.log(d);
+  return d;
+}
+
+function filtered_type(d, i, columns) {
+  d.date = parseDate(d.date);
+  var tot = 0;
+  col = columns.length;
+//  console.log(col);
+  for (var i = 1; i < col; ++i){
+//    console.log(d[columns[i]]);
+    if ((columns[i] != "zz_no genre") && (columns[i] != "zz_needs label")){
+      tot = tot + (+d[columns[i]]);
+    } else {
+      delete d[columns[i]];
+    }
+  } 
+  d.Total = tot;
+  for (var i = 1; i < col; ++i){
+    if (columns[i] != "Total"){
+      d[columns[i]] = (+d[columns[i]])/d.Total;
+    }
+  } 
+  d.Total = 1.0;
+//  console.log(d);
   return d;
 }
