@@ -3,6 +3,10 @@ body {
   padding:0px;
 }
 
+.chart{
+  text-align: center;
+}
+
 .big-title {
     font-size: 101px;
     font-family: "Mercury SSm A", "Mercury SSm B";
@@ -115,7 +119,7 @@ a:visited{
 
 
 .story-section {
-    max-width: 750px;
+    max-width: 950px;
     margin: 0 auto;
 }
 

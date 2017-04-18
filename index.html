@@ -1,25 +1,52 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-
-<link href="build/nv.d3.1.15.css" rel="stylesheet" type="text/css">
 <link href="build/stolen.css" rel="stylesheet" type="text/css">
 
 <style>
+.focus circle {
+        fill: black;
+        stroke: white;
+    }
+.overlay {
+        fill: none;
+        pointer-events: all;
+    }
+.fiftyper {
+    }
 
-body {
-  overflow-y:scroll;
-  margin:0;
-}
-
-text {
+div.tooltip {
+  position: absolute;
+  text-align: center;
+  padding: 2px;
   font: 12px sans-serif;
+  background: white;
+  border: 0px;
+  border-radius: 8px;
+  pointer-events: none;
 }
 
-#chart1, #chart2, #chart3 {
-  height: 500px;
+.bar {
+  fill: steelblue;
+}
+
+.neg_bar {
+  fill: #7e7e7e;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+.mult {
+  margin-top: 10px;
+  margin-left: 10px;
+  background: #f7f7f7;
 }
 
 </style>
+<script src="d3.v4.min.js"></script>
+<script type="text/javascript" src="combined.js"></script>
+<!--<script type="text/javascript" src="stacked_area.js"></script>-->
+
+<body>
 <div></div>
 <body class='with-3d-shadow with-transitions'>
 <div class="opening-section">
@@ -52,44 +79,33 @@ text {
   <p></p>
 
 
-    <p class="prose">It needs scarcely to be told, with what feelings, on the eve of a Nantucket voyage, I regarded those marble tablets, and by the murky light of that darkened, doleful day read the fate of the whalemen who had gone before me. Yes, Ishmael, the same fate may be thine. But somehow I grew merry again. Delightful inducements to embark, fine chance for promotion, it seems—aye, a stove boat will make me an immortal by brevet. Yes, there is death in this business of whaling—a speechlessly quick chaotic bundling of a man into Eternity. But what then? Methinks we have hugely mistaken this matter of Life and Death. Methinks that what they call my shadow here on earth is my true substance. Methinks that in looking at things spiritual, we are too much like oysters observing the sun through the water, and thinking that thick water the thinnest of air. Methinks my body is but the lees of my better being. In fact take my body who will, take it I say, it is not me. And therefore three cheers for Nantucket; and come a stove boat and stove body when they will, for stave my soul, Jove himself cannot.
-    </p>
+    <p class="prose">Shirely Jackson is most famous for hershort story, “The Lottery.” Published in 1948, the story is about a little American town engaging in a sinister annual ritual. It's powerfully creepy, and today is considered such a classic that it was even referenced in <i>The Simpsons</i>. Jackson was also commercially and critically successful in her lifetime -- she won awards, regularly sold her fiction, published several novels and essay collectionns. In her non-fiction, she wrote about what it was like to be a female author in the 1940s and 50s. Like when she went into the hospital to deliver her third child, she told the receptionist she was a writer, so the receptionist wrote “housewife” on her intake form.</p>
+
+    <p class="prose">It certainly seems like gender equality in literature has come a long way in the past seventy years. For one thing: if a woman says she's a writer, I think people have an easier time accepting that she's a god damned writer.</p>
+
+    <p class="prose">But then again, I'm a writer and a woman. And I'm an optimist. So I could be wrong.</p>
+
+    <p class="prose">How much progress has American literature actually made towards gender equality in the past 70 years?</p>
   </div>
   <div>
   <h2 class="name">Best-Selling Novels by Author Gender<br />1950-2017</h2>
-    <br/>
-    <svg id="chart2"></svg>
-  </div>
-<h2>Genre Fiction and Literary Fiction Over Time</h2>
-
-  <div>
-    <svg id="chart1"></svg>
+  <svg width="950" height="500" class="chart" id="genders"></svg>
+  <form id="gender_form" action="">
+  <input type="radio" name="gender-scale" value="count" onclick="transition('#genders')">count</input>
+  <input type="radio" name="gender-scale" value="percent" onclick="transition('#genders')" checked>percent</input>
+  </form>
   </div>
 
-<h2>Gain in Female Authorship in Popular Genres</h2>
+<h2 class="name">Best-Selling Novels by Genre</h2>
 
-<div id="chart3">
-  <svg> </svg>
-</div>
+<svg width="950" height="500" class="chart" id="genres"></svg>
 
 
-</div>
-<script type="text/javascript">
-    svg = d3.select(#chart3)
-    svg.append("line")
-    .style("stroke", "black")
-    .attr("x1", 1041408000)
-    .attr("y1", y(.10))
-    .attr("x2", 1451635200) 
-    .attr("y2", y(.100));
-</script>
 
-<script src="build/d3.v3.js"></script>
-<script src="build/nv.d3.1.15.js"></script>
-<script src="models/stackedArea.js"></script>
-<script src="models/stackedAreaChart.js"></script>
-
-<script src="utils.js"></script>
-<script src="models/axis.js"></script>
-<script src='area.js' type='text/javascript'> </script>
-<script src='line.js' type='text/javascript'> </script>
+<form id="genre_form" action="">
+<input type="radio" name="genre-scale" value="count" onclick="transition('#genres')">count</input>
+<input type="radio" name="genre-scale" value="percent" onclick="transition('#genres')" checked>percent</input>
+<input type="radio" name="genre-scale" value="genres_only" onclick="transition('#genres')">genres only</input>
+</form>
+<div width="950" height="900" class="chart" id="smult"></div>
+</body>

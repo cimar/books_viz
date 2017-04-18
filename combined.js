@@ -350,7 +350,7 @@ var parseDate = d3.timeParse("%Y");
 function smallMultiples(data, chart_id){
   console.log(data);
   container = d3.select("#smult");
-  container.attr("width", 950);
+  container.style("width", "900px");
   var margin = {top: 25, right: 20, bottom: 15, left: 50},
     width = 250 + margin.left + margin.right,
     height = 250 + margin.top + margin.bottom;

@@ -1,1 +1,0 @@
-divergent_bar.js
