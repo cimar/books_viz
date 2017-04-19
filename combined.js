@@ -352,7 +352,7 @@ function stackedAreaChart(chart_id,data,type){
   //d3 symbol creates a path-string, for example
   //"M0,-8.059274488676564L9.306048591020996,
   //8.059274488676564 -9.306048591020996,8.059274488676564Z"
-        .shape("path", d3.symbol().type(d3.symbolCircle).size(150)())
+        .shape("path", d3.symbol().type(d3.symbolSquare).size(150)())
         .shapePadding(10)
   //use cellFilter to hide the "e" cell
         .cellFilter(function(d){ return d.label !== "e" })
@@ -361,15 +361,8 @@ function stackedAreaChart(chart_id,data,type){
 
     svg.select(".legendOrdinal")
       .call(legendOrdinal);
-    }
 
-
-  setTimeout(function() { 
-    legend
-      .style("font-size","20px")
-      .attr("data-style-padding",10)
-      .call(d3.legend)
-  },1000)
+  }
 
 }
 
@@ -423,8 +416,8 @@ var parseDate = d3.timeParse("%Y");
 
 function smallMultiples(data, chart_id){
   var margin = {top: 25, right: 20, bottom: 35, left: 50},
-    width = 100 + margin.left + margin.right,
-    height = 100 + margin.top + margin.bottom;
+    width = 75 + margin.left + margin.right,
+    height = 75 + margin.top + margin.bottom;
 
   var y = d3.scaleTime()
       .range([0, height]);
@@ -545,16 +538,21 @@ function smallMultiples(data, chart_id){
       .attr("x2", x(0))
       .style("stroke", "black");
 
-    svg = svg.select("svg.mult");
+    console.log("smults!",svg);
 
-    svg.append("text")
-      .attr("y", height*1/4)
+    // ATTACH LABELS TO THE FIRST SMULT 
+
+    g = svg._groups[0][0];
+    g = d3.select(g);
+
+    g.append("text")
+      .attr("y", height*1/3)
       .attr("x", width*3/4)
       .style("text-anchor", "middle")
       .text("Women");
 
-    svg.append("text")
-      .attr("y", height*1/4)
+    g.append("text")
+      .attr("y", height*1/3)
       .attr("x", width*1/4)
       .style("text-anchor", "middle")
       .text("Men");
