@@ -11,14 +11,24 @@
         fill: none;
         pointer-events: all;
     }
-.fiftyper {
+
+.selected {
+    margin-top: 30px;
+    margin-bottom: 30px;
     }
+
+.legend rect {
+  fill:white;
+  stroke:black;
+  opacity:0.8;}
+
 
 div.tooltip {
   position: absolute;
-  text-align: center;
-  padding: 2px;
-  font: 12px sans-serif;
+  text-align: left;
+  padding: 6px;
+  font: 13px sans-serif;
+  line-height: 15px;
   background: white;
   border: 0px;
   border-radius: 8px;
@@ -41,8 +51,19 @@ div.tooltip {
   background: #f7f7f7;
 }
 
+.value{
+  font: 12px sans-serif;
+  font-weight: bold;
+}
+
+.area-label{
+  font: 16px;
+  font-weight: bold;
+}
+
 </style>
 <script src="d3.v4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.min.js"></script>
 <script type="text/javascript" src="combined.js"></script>
 <!--<script type="text/javascript" src="stacked_area.js"></script>-->
 
@@ -68,18 +89,18 @@ div.tooltip {
   </p>
 </div>
 <div class="story-section">
-  <div class="prose-wrapper">
-  <blockquote style="text-align:center"><p class="prose"><i>"Occupation?"<br/>
+    <div class="prose-wrapper">
+
+    <p class="prose">When it comes to fiction writers in the 1950s, you can’t beat Shirley Jackson. Most famous for her short story “The Lottery,” about a sleepy American town with a sinister annual ritual, Jackson was masterful, prolific, and extremely successful both critically and commercially. Today her work is studied, collected, anthologized, taught in high school, and referenced in <i>The Simpsons</i>. She even has an award named after her. In her lifetime, she won awards, including the O’Henry and Best American Short Stories, sold her writing to the top magazines and publishing houses in the country, and had her work adapted for television, film, and (“in one completely mystifying transformation”) the ballet.
+
+    <p class="prose">Jackson was also a woman, wife, and mother. Which came with its downside in the 1950s. When she went into the hospital to deliver her third child, she had the following exchange with the receptionist filling out her form:</p>
+
+    <blockquote style="text-align:left"><p class="prose"><i>"Occupation?"<br/>
       "Writer," I said.<br/>
       "Housewife," she said.<br/>
       "Writer," I said.<br/>
       "I'll just put down housewife," she said.<br/></i>
-  </p>
-  <p class="prose">-- Shirley Jackson, 1962 New York Times Best-Seller</p></blockquote>
-  <p></p>
-
-
-    <p class="prose">Shirely Jackson is most famous for hershort story, “The Lottery.” Published in 1948, the story is about a little American town engaging in a sinister annual ritual. It's powerfully creepy, and today is considered such a classic that it was even referenced in <i>The Simpsons</i>. Jackson was also commercially and critically successful in her lifetime -- she won awards, regularly sold her fiction, published several novels and essay collectionns. In her non-fiction, she wrote about what it was like to be a female author in the 1940s and 50s. Like when she went into the hospital to deliver her third child, she told the receptionist she was a writer, so the receptionist wrote “housewife” on her intake form.</p>
+    </p></blockquote>
 
     <p class="prose">It certainly seems like gender equality in literature has come a long way in the past seventy years. For one thing: if a woman says she's a writer, I think people have an easier time accepting that she's a god damned writer.</p>
 
@@ -95,17 +116,17 @@ div.tooltip {
   <input type="radio" name="gender-scale" value="percent" onclick="transition('#genders')" checked>percent</input>
   </form>
   </div>
-
+<div>
 <h2 class="name">Best-Selling Novels by Genre</h2>
-
 <svg width="950" height="500" class="chart" id="genres"></svg>
-
-
-
 <form id="genre_form" action="">
 <input type="radio" name="genre-scale" value="count" onclick="transition('#genres')">count</input>
 <input type="radio" name="genre-scale" value="percent" onclick="transition('#genres')" checked>percent</input>
 <input type="radio" name="genre-scale" value="genres_only" onclick="transition('#genres')">genres only</input>
 </form>
+</div>
+<div>
+<h2 class="name">Gender Ratio of the Best-Selling Genres by Decade</h2>
 <div width="950" height="900" class="chart" id="smult"></div>
+</div>
 </body>

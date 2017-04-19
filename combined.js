@@ -12,11 +12,24 @@ function type_from_radio(value){
   return filtered_type;
 }
 
+function componentToHex(c) {
+    var hex = c.toString(16);
+    return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(rgbstr) {
+    var len = rgbstr.length-4;
+    var substr = rgbstr.substr(4,len-1);
+    color_arr = substr.split(",");
+    console.log(color_arr[2]);
+    return "#" + componentToHex(+color_arr[0]) + componentToHex(+color_arr[1]) + componentToHex(+color_arr[2]);
+}
+
 function file_from_id(chart_id){
   if (chart_id == "#genres"){
     return "genre_count.tsv";
   } else {
-    if (chart_id = "#genders"){
+    if (chart_id == "#genders"){
       return "gender_count.tsv";
     }
   }
@@ -27,7 +40,7 @@ function selection_from_id(chart_id){
   if (chart_id == "#genres"){
     search = "genre-scale";
   } else {
-    if (chart_id = "#genders"){
+    if (chart_id == "#genders"){
       search = "gender-scale";
     }
   }
@@ -56,33 +69,37 @@ function constructData(d_ls){
 
 var formatTime = d3.timeFormat("%Y");
 
-function constructTtText(d,type){
-//  console.log(d);
-  str = "";
+function constructTtText(d,k,c){
+  console.log(c);
+  str = "<strong><h3>&nbsp;"+formatTime(d.date)+"</strong></h3>";
   i = 0;
   reversed = reverse_order(d);
 //  console.log(reversed);
   for(entry in reversed){
     field = reversed[entry];
     next = d[field];
-    if ((field!="Total") || (type!=per_type)) {
+    if (((field!="Total") || (d.Total!=1)) && !(isNaN(next))) {
+      if (field == k){
+        console.log("True! It's true!");
+        str = str+'<strong><font size="2" color="'+c+'">';
+      }
       if (field != "date"){
-        if (type == "per_type") {
+        if (d.Total == 1) {
           next = d3.format(".0%")(next);
         }else{
           next = d3.format("1")(next);
         }
-        str = str + field +": ";
-      } else {
-        str = str + "Year: "
-        next = formatTime(next)
+        str = str + "&nbsp" + field +": ";
+        str = str + next;
+        if (field == k){
+          str = str + "</font></strong></style>"
+        }
+        str = str + "<br/>";
       }
-      str = str + next;
-      str = str + "<br/>";
     }
     i ++;
   }
-  return str;
+  return str+"<br/>";
 }
 
 
@@ -126,7 +143,7 @@ function filtered_type(d, i, columns) {
 //  console.log(col);
   for (var i = 1; i < col; ++i){
 //    console.log(d[columns[i]]);
-    if ((columns[i] != "zz_no genre") && (columns[i] != "zz_needs label")){
+    if (columns[i] != "Literary/None"){
       tot = tot + (+d[columns[i]]);
     } else {
       delete d[columns[i]];
@@ -155,6 +172,12 @@ function stackedAreaChart(chart_id,data,type){
   var x = d3.scaleTime().range([0, width]),
     y = d3.scaleLinear().range([height, 0]),
     z = d3.scaleOrdinal(d3.schemeCategory20);
+
+  //Make room for a legend on the genres chart
+  var squish = .85
+  if(chart_id == "#genres"){
+    x = d3.scaleTime().range([0, (width * squish)]);
+  }
 
   var stack = d3.stack();
 
@@ -203,7 +226,7 @@ function stackedAreaChart(chart_id,data,type){
 
 
   // REMOVE AND DRAW THE AXES
-
+  g.selectAll(".area-label").remove();
   g.select(".fiftyper").remove();
   g.select(".axis--y").remove();
   g.select(".axis--x").remove();
@@ -238,31 +261,30 @@ function stackedAreaChart(chart_id,data,type){
 // TOOLTIP ACTIONS GO HERE
 
   enterLayer.on("mousemove", function(d) {
-    console.log(d);
+    color = d3.select(this).style("fill");
+    color = rgbToHex(color);
+    console.log(color);
     d_array = constructData(d);
-    console.log(d_array);
     k = d.key
     mousex = d3.mouse(this);
     mousex = mousex[0];
     var invertedx = x.invert(mousex);
     var i = bisectDate(d_array, invertedx, 1);
-    console.log(i);
 
       d0 = d_array[i - 1],
       d1 = d_array[i],
       d = invertedx - d0.date > d1.date - invertedx ? d1 : d0;
 
-    tooltip_text = constructTtText(d,type);
+    tooltip_text = constructTtText(d,k,color);
     console.log(tooltip_text);
 
     div.transition()
        .duration(50)
-       .style("opacity", .9);
+       .style("opacity", .97);
     div.html(tooltip_text)
        .style("left", (d3.event.pageX + 7) + "px")
-       .style("top", (d3.event.pageY - 28) + "px");
+       .style("top", (d3.event.pageY - 80) + "px");
 
-    console.log(d.date);
     vertical.transition()
       .duration(50)
       .attr("x", (x(d.date) + margin.left ))
@@ -271,31 +293,83 @@ function stackedAreaChart(chart_id,data,type){
 
     .on("mouseout", function(d) {
         div.transition()
-          .duration(500)
+          .duration(5000)
           .style("opacity", 0);
         vertical.transition()
-          .duration(500)
+          .duration(5000)
           .style("opacity", 0);
 
     }); 
 
 // MERGE
 
+
   layer.merge(enterLayer)
       .transition().duration(1000)
       .style("fill", function(d) { return z(d.key); })
       .attr("d", area);
 
-  if ((chart_id == "#genders") && (type == per_type)){
-    line = g.append("line")
-      .attr("class", "fiftyper")
-      .attr("x1",x(parseDate("1950")))
-      .attr("y1",y(.5))
-      .attr("x2",x(parseDate("2017")))
-      .attr("y2",y(.5))
-      .style("stroke", "white")
-      .style("stroke-width", 3);
+
+
+
+
+  if (chart_id == "#genders"){
+
+    g.append("text")
+      .data(data.columns)
+      .attr("class","area-label")
+      .attr("x", .9*width)
+      .attr("y", .25*height)
+      .style("text-anchor", "end")
+      .text("Men");
+
+    g.append("text")
+      .data(data.columns)
+      .attr("class","area-label")
+      .attr("x", .9*width)
+      .attr("y", .75*height)
+      .style("text-anchor", "end")
+      .text("Women");
+
+    if(type == per_type){
+      line = g.append("line")
+        .attr("class", "fiftyper")
+        .attr("x1",x(parseDate("1950")))
+        .attr("y1",y(.5))
+        .attr("x2",x(parseDate("2017")))
+        .attr("y2",y(.5))
+        .style("stroke", "white")
+        .style("stroke-width", 3);
+    }
   }
+
+  if (chart_id == "#genres"){
+    svg.append("g")
+      .attr("class", "legendOrdinal")
+      .attr("transform", "translate("+squish*1.09*width+","+1.5*margin.top+")");
+
+    var legendOrdinal = d3.legendColor()
+  //d3 symbol creates a path-string, for example
+  //"M0,-8.059274488676564L9.306048591020996,
+  //8.059274488676564 -9.306048591020996,8.059274488676564Z"
+        .shape("path", d3.symbol().type(d3.symbolCircle).size(150)())
+        .shapePadding(10)
+  //use cellFilter to hide the "e" cell
+        .cellFilter(function(d){ return d.label !== "e" })
+        .scale(z)
+        .ascending(true);
+
+    svg.select(".legendOrdinal")
+      .call(legendOrdinal);
+    }
+
+
+  setTimeout(function() { 
+    legend
+      .style("font-size","20px")
+      .attr("data-style-padding",10)
+      .call(d3.legend)
+  },1000)
 
 }
 
@@ -348,12 +422,9 @@ var parseDate = d3.timeParse("%Y");
 
 
 function smallMultiples(data, chart_id){
-  console.log(data);
-  container = d3.select("#smult");
-  container.style("width", "900px");
-  var margin = {top: 25, right: 20, bottom: 15, left: 50},
-    width = 250 + margin.left + margin.right,
-    height = 250 + margin.top + margin.bottom;
+  var margin = {top: 25, right: 20, bottom: 35, left: 50},
+    width = 100 + margin.left + margin.right,
+    height = 100 + margin.top + margin.bottom;
 
   var y = d3.scaleTime()
       .range([0, height]);
@@ -371,23 +442,15 @@ function smallMultiples(data, chart_id){
     return d.genre;
   }
 
-  console.log(data);
-  // Nest data by genre.
   var genres = d3.nest().key(key_funct).entries(data);
 
-  console.log(genres);
-
-  // Compute the maximum percent per genre, needed for the x-domain.
   genres.forEach(function(s) {
-//    console.log("S");
-//    console.log(s);
     for (i=0; i<s.values.length; i++){
       item = s.values[i]
       item.perMen = 1+(-1*(+item.percent));
     }
     s.maxMen = d3.min(s.values, function(d) { return d.perMen; });
     s.maxWomen = d3.max(s.values, function(d) { return d.percent; });
-    //console.log(s);
     for (i=0; i<s.values.length; i++){
       item = s.values[i]
       item.maxWomen = s.maxWomen;
@@ -395,17 +458,17 @@ function smallMultiples(data, chart_id){
     }
   });
 
-  //console.log(genres);
-  //console.log(genres[4]);
-
-  // when do you use data.map?
-  //
-  // Compute the minimum and maximum date across genres.
-  // We assume values are sorted by date.
+  // Hardcoding my axis extents
   y.domain([parseDate("1950"),parseDate("2020")]);
   x.domain(d3.extent([-1, 1]));
+
+
+  // Grab the div to put the small multiples in
+  container = d3.select("#smult");
+  container.style("width", "900px");
+
   // Add an SVG element for each genre, with the desired dimensions and margin.
-  var svg = container.data(genres)
+  var svg = container.selectAll("svg.mult").data(genres)
     .enter().append("svg")
       .attr("class","mult")
       .attr("height", height + margin.top + margin.bottom)
@@ -431,48 +494,49 @@ function smallMultiples(data, chart_id){
     .attr("x", function(d) { return x(d.perMen); })
     .attr("width", function(d) { return Math.abs(x(0) - x(d.perMen)); });
 
+  bars.append("text")
+    .attr("class", "value")
+    .attr("y", function(d) { return (y(d.decade) + getBandwidth(y,data)/2 +5);})
+    .attr("x", function(d) {
+        if (d.percent >= d.perMen){
+          return x(-1 * (+d.percent - .04));
+        } else {
+          return x(+d.perMen - .04);
+        }
+    })
+//    .attr("alignment-baseline","central")
+    .attr("text-anchor", function(d){
+      if (d.percent >= d.perMen){
+          return "end";
+        } else {
+          return "start";
+        }
+    })
+    .text(function(d){
+        if (d.percent >= d.perMen){
+          return d3.format(".0%")(d.percent);
+        } else {
+          return d3.format(".0%")(d.perMen);
+        }
+    });
+
   console.log(bars);
-
-/*
-  // Add the area path elements. Note: the x-domain is set per element.
-  svg.append("path")
-      .attr("class", "area")
-      .attr("d", function(d) { x.domain([0, d.maxPrice]); return area(d.values); });
-
-  // Add the line path elements. Note: the x-domain is set per element.
-  svg.append("path")
-      .attr("class", "line")
-      .attr("d", function(d) { x.domain([0, d.maxPrice]); return line(d.values); });
-*/
-  // Add a small label for the genre name.
 
   svg.append("g")
     .attr("class", "axis axis--y")
-//    .attr("transform", "translate(" + x(0) + ",0)")//+7+")")
     .call(d3.axisLeft(y).ticks(7));
 
   svg.append("g")
     .attr("class", "axis axis--x")
     .call(d3.axisTop(x).ticks(6, "%"));
 
+// Add a small label for the genre name.
     svg.append("text")
-      .attr("y", height - 16)
+      .attr("y", height + 15)
       .attr("x", width - 6)
       .style("text-anchor", "end")
       .style("font-weight","bold")
       .text(function(d) { return d.key; });
-
-    svg.append("text")
-      .attr("y", height*1/4)
-      .attr("x", width*3/4)
-      .style("text-anchor", "middle")
-      .text("Percent Women");
-
-    svg.append("text")
-      .attr("y", height*1/4)
-      .attr("x", width*1/4)
-      .style("text-anchor", "middle")
-      .text("Percent Men");
 
     svg.append("line")
       .attr("y1", y(parseDate("1950")))
@@ -480,6 +544,20 @@ function smallMultiples(data, chart_id){
       .attr("y2", y(parseDate("2020")))
       .attr("x2", x(0))
       .style("stroke", "black");
+
+    svg = svg.select("svg.mult");
+
+    svg.append("text")
+      .attr("y", height*1/4)
+      .attr("x", width*3/4)
+      .style("text-anchor", "middle")
+      .text("Women");
+
+    svg.append("text")
+      .attr("y", height*1/4)
+      .attr("x", width*1/4)
+      .style("text-anchor", "middle")
+      .text("Men");
 }
 
 
@@ -495,7 +573,7 @@ function smult_type(d) {
   }
 }
 
-d3.tsv("the_data.tsv", smult_type, function(error, data) {
+d3.tsv("smult_data.tsv", smult_type, function(error, data) {
 
   smallMultiples(data,"#smult");
 });
